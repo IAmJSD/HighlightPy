@@ -3,6 +3,9 @@ from discord.ext import commands
 import discord
 import time
 
+version = "1.00a1"
+# TODO: Adjust version as needed.
+
 
 class Information:
     """Commands which show information about the bot."""
@@ -29,6 +32,20 @@ class Information:
             description="To invite me to your server, please use [this]"
             "(https://discordapp.com/oauth2/authorize?client_id="
             f"{client.user.id}&scope=bot&permissions=84992) link!"
+        )
+        embed.set_thumbnail(url=client.user.avatar_url)
+        await ctx.channel.send(embed=embed)
+
+    @commands.command(aliases=["details", "what", "isthisgab"])
+    async def info(self, ctx):
+        """Tells you some information about me!"""
+        embed = discord.Embed(
+            color=0x3669FA,
+            title=f"Hi, I'm {client.user}",
+            description=f"I'm running `HighlightPy` v**{version}**!\n"
+            "My source code is available [here](https://github.com/"
+            "JakeMakesStuff/HighlightPy)!\nTo learn more about using me, "
+            "run `h!help`!"
         )
         embed.set_thumbnail(url=client.user.avatar_url)
         await ctx.channel.send(embed=embed)
