@@ -19,6 +19,7 @@ class BaseClient(AutoShardedBot):
         self.rethink_connection = loop.run_until_complete(
             self._get_rethink_connection()
         )
+        self.token = os.environ['BOT_TOKEN']
 
     @staticmethod
     async def _get_rethink_connection():
@@ -28,6 +29,10 @@ class BaseClient(AutoShardedBot):
             port=28015,
             password=os.environ.get("RETHINK_PASS") or ""
         )
+
+    def run(self):
+        """Runs with the token in the code."""
+        super().run(self.token)
 
 
 client = BaseClient(loop=loop)
