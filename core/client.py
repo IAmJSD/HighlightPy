@@ -11,6 +11,7 @@ class BaseClient(AutoShardedBot):
     """The client class that HighlightPy is based on."""
     def __init__(self, **kwargs):
         logging.basicConfig(level=logging.INFO)
+        r.set_loop_type("asyncio")
 
         if "shard_count" not in kwargs:
             kwargs['shard_count'] = os.environ.get("SHARD_COUNT")
