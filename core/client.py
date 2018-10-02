@@ -31,7 +31,7 @@ class BaseClient(AutoShardedBot):
         )
 
     def run(self):
-        """Runs with the token in the code."""
+        """Runs with the token in the class."""
         super().run(self.token)
 
 
