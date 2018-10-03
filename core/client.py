@@ -41,6 +41,11 @@ class BaseClient(AutoShardedBot):
             password=os.environ.get("RETHINK_PASS") or ""
         )
 
+    @property
+    def cog_list(self):
+        """Returns a list of all of the cogs."""
+        return list(self.cogs.values())
+
     def run(self):
         """Runs with the token in the class."""
         super().run(self.token)
