@@ -93,12 +93,16 @@ class Information(Cog):
             text += f"- {cmd.help}\n"
             cog_string += text
 
+        author_id = msg.embeds[0].footer.text.split(" ")[0]
+
         embed = discord.Embed(
             color=0x3669FA,
             title=f"{cog.name} Commands:",
             description=cog_string
         )
-        embed.set_footer(text=f"Page {page}/{len(client.cog_list)}")
+        embed.set_footer(
+            text=f"{author_id} - Page {page}/{len(client.cog_list)}"
+        )
 
         await msg.edit(embed=embed)
 
@@ -111,6 +115,7 @@ class Information(Cog):
         embed = discord.Embed(
             title="Loading..."
         )
+        embed.set_footer(text=f"{ctx.author.id}")
         msg = await ctx.channel.send(embed=embed)
         await self.render_help_page(msg, 1, True)
 
@@ -130,6 +135,52 @@ class Information(Cog):
             return await self.show_one_command(cmd, ctx)
 
         return await self.show_default_help(ctx)
+
+    async def on_reaction_add(self, reaction, user):
+        """Handles reaction page switch-eroos."""
+        if reaction.message.author.id != client.user.id:
+            return
+
+        if len(reaction.message.embeds) == 0:
+            return
+
+        embed = reaction.message.embeds[0]
+
+        if not embed.footer or not embed.footer.text:
+            return
+
+        footer_text_split = embed.footer.text.split(" ")
+
+        try:
+            if footer_text_split[2] != "Page":
+                return
+        except IndexError:
+            return
+
+        page = int(footer_text_split[3].split("/")[0])
+        author = int(footer_text_split[0])
+
+        if user.id != author:
+            return
+
+        max_pages = len(client.cog_list)
+
+        try:
+            await reaction.message.remove_reaction(reaction.emoji, user)
+        except discord.Forbidden:
+            pass
+
+        if str(reaction.emoji) == "◀":
+            new_page = page - 1
+        elif str(reaction.emoji) == "▶":
+            new_page = page + 1
+        else:
+            return
+
+        if new_page == 0 or new_page > max_pages:
+            return
+
+        await self.render_help_page(reaction.message, new_page)
 
 
 client.add_cog(Information())
