@@ -74,7 +74,8 @@ class Information(Cog):
         embed.set_thumbnail(url=client.user.avatar_url)
         await ctx.channel.send(embed=embed)
 
-    async def render_help_page(self, msg, page, add_buttons=False):
+    @staticmethod
+    async def render_help_page(msg, page, add_buttons=False):
         """Renders the current help page."""
         try:
             cog = client.cog_list[page - 1]
